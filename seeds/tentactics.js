@@ -1,4 +1,4 @@
-const puzzles = require('../data/puzzledatasmall.json')
+const puzzles = require('../data/tentactics.json')
 
 exports.seed = async function(knex) {
   // Deletes ALL existing entries
