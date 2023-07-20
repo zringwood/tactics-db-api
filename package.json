@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "node --watch server.js",
-    "reset-db": "npx knex migrate:down npx kenx migrate:up npx knex seed:run"
+    "reset-db": "npx knex migrate:down & npx knex migrate:up & npx knex seed:run"
   },
   "dependencies": {
     "cors": "^2.8.5",
