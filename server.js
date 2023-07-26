@@ -7,7 +7,8 @@ const PORT = process.env.port || 8080;
 const knex = require("knex")(require("./knexfile"));
 app.use(cors(corsOptions));
 
-//Serves a middlegame puzzle with a given id
+
+//Serves a middlegame puzzle with a given id. 
 app.get("/middlegames/:id", (req, res) => {
     const id = req.params.id;
     knex('middlegames').where({ id: req.params.id }).then((response) => {
@@ -19,7 +20,15 @@ app.get("/middlegames/:id", (req, res) => {
     })
 
 })
-
+//Serves a middlegame puzzle with a given difficulty, within 100 rating points either side. 
+app.get("/middlegames/difficulty/:rating", (req, res) => {
+    const rating = Number(req.params.rating);
+    knex.raw(` select * from middlegames where Rating > ${rating-100} AND Rating < ${rating+100} order by rand() LIMIT 1;`).then(response => {
+        if (response.length > 0)
+            return res.status(200).send(response[0])
+        return res.status(404).send(`No puzzle with id ${req.params.id} found!`)
+    })
+})
 //Serves an endgame puzzle with a given id
 app.get("/endgames/:id", (req, res) => {
     const id = req.params.id;
