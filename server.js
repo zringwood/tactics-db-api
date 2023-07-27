@@ -7,49 +7,12 @@ const PORT = process.env.port || 8080;
 const knex = require("knex")(require("./knexfile"));
 app.use(cors(corsOptions));
 
+const middlegames = require('./routes/middlegames')
+const endgames = require('./routes/endgames')
 
-//Serves a middlegame puzzle with a given id. 
-app.get("/middlegames/:id", (req, res) => {
-    const id = req.params.id;
-    knex('middlegames').where({ id: req.params.id }).then((response) => {
-        if (response.length > 0)
-            return res.status(200).send(response[0])
-        return res.status(404).send(`No puzzle with id ${req.params.id} found!`)
-    }).catch(error => {
-        res.status(500).send(error);
-    })
+app.use("/middlegames", middlegames)
+app.use("/endgames", endgames)
 
-})
-//Serves a middlegame puzzle with a given difficulty, within 100 rating points either side. 
-app.get("/middlegames/difficulty/:rating", (req, res) => {
-    const rating = Number(req.params.rating);
-    knex.raw(` select * from middlegames where Rating > ${rating-100} AND Rating < ${rating+100} order by rand() LIMIT 1;`).then(response => {
-        if (response.length > 0)
-            return res.status(200).send(response[0])
-        return res.status(404).send(`No puzzle with id ${req.params.id} found!`)
-    })
-})
-//Serves an endgame puzzle with a given id
-app.get("/endgames/:id", (req, res) => {
-    const id = req.params.id;
-    knex('endgames').where({ id: req.params.id }).then((response) => {
-        if (response.length > 0)
-            return res.status(200).send(response[0])
-        return res.status(404).send(`No puzzle with id ${req.params.id} found!`)
-    }).catch(error => {
-        res.status(500).send(error);
-    })
-
-})
-//Serves a middlegame puzzle with a given difficulty, within 100 rating points either side. 
-app.get("/endgames/difficulty/:rating", (req, res) => {
-    const rating = Number(req.params.rating);
-    knex.raw(` select * from endgames where Rating > ${rating-100} AND Rating < ${rating+100} order by rand() LIMIT 1;`).then(response => {
-        if (response.length > 0)
-            return res.status(200).send(response[0])
-        return res.status(404).send(`No puzzle with id ${req.params.id} found!`)
-    })
-})
 //Serve a puzzle
 app.get("/puzzle/:id", (req, res) => {
     const id = req.params.id;
@@ -63,6 +26,6 @@ app.get("/puzzle/:id", (req, res) => {
 
 })
 
-app.listen(8080, () => {
-    console.log("Server listening on port 8080")
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`)
 })
