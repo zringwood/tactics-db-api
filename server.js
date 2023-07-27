@@ -5,6 +5,10 @@ require('dotenv').config();
 const  corsOptions = { origin: 'http://localhost:3000'}
 const PORT = process.env.port || 8080;
 const knex = require("knex")(require("./knexfile"));
+const sanitzer = require("perfect-express-sanitizer")
+app.use(sanitzer.clean({
+    sql:true
+}))
 app.use(cors(corsOptions));
 
 const middlegames = require('./routes/middlegames')
