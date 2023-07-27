@@ -18,7 +18,9 @@ router.get("/:difficulty/count", (req, res) => {
     knex.raw(` select count(*) from middlegames_${difficulty}`).then(response => {
         if (response.length > 0)
             return res.status(200).send(response[0][0])
-        return res.status(404).send(`No puzzle with id ${req.params.id} found!`)
+        return res.sendStatus(503)
+    }).catch(() => {
+        return res.status(404).send(`No table with that difficulty (${req.params.difficulty}) found!`)
     })
 })
 //Serves a middlegame puzzle with a given difficulty and a given id. 
